@@ -78,7 +78,6 @@ gcloud compute firewall-rules create default-puma-server\
 testapp_IP = 35.204.145.242
 testapp_port = 9292
 
-
 ## ДЗ №6 Сборка образов VM при помощи Packer
 
  - [x] Основное ДЗ
