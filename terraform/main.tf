@@ -65,3 +65,16 @@ resource "google_compute_firewall" "firewall_puma" {
   # Правило применимо для инстансов с тегом …
   target_tags = ["reddit-app"]
 }
+
+# При таком способе добавления ключей, если хоть какие-нибудь ключи уже есть, то возникает ошибка и новые ключи не добавляются,  
+# resource "google_compute_project_metadata" "default" {
+#   metadata {
+#     ssh-keys = "appuser1:${file(var.public_key_path)}\nappuser2:${file(var.public_key_path)}"
+#   }
+# }
+
+# Новые ключи заменяют имеющиеся
+resource "google_compute_project_metadata_item" "default" {
+  key   = "ssh-keys"
+  value = "appuser1:${file(var.public_key_path)}\nappuser2:${file(var.public_key_path)}"
+}
