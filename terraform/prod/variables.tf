@@ -29,6 +29,10 @@ variable count {
   default     = 1
 }
 
+variable source_ip_allowed {
+  description = "IP address allowed to access app in prod"
+}
+
 variable app_disk_image {
   description = "Disk image for reddit app"
   default     = "reddit-app-base"

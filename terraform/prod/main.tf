@@ -21,5 +21,5 @@ module "db" {
 
 module "vpc" {
   source        = "../modules/vpc"
-  source_ranges = ["79.172.117.228/32"]
+  source_ranges = ["${var.source_ip_allowed}"]
 }
