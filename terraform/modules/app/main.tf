@@ -1,6 +1,6 @@
 resource "google_compute_instance" "app" {
   name         = "reddit-app"
-  machine_type = "g1-small"
+  machine_type = "${var.machine_type}"
   zone         = "${var.zone}"
   tags         = ["reddit-app"]
 
@@ -26,21 +26,21 @@ resource "google_compute_instance" "app" {
     }
   }
 
-  # connection {
-  #   type        = "ssh"
-  #   user        = "appuser"
-  #   agent       = false
-  #   private_key = "${file(var.private_key_path)}"
-  # }
+  connection {
+    type        = "ssh"
+    user        = "appuser"
+    agent       = false
+    private_key = "${file(var.private_key_path)}"
+  }
 
-  # provisioner "file" {
-  #   source      = "files/puma.service"
-  #   destination = "/tmp/puma.service"
-  # }
+  provisioner "file" {
+    source      = "${path.module}/files/puma.service"
+    destination = "/tmp/puma.service"
+  }
 
-  # provisioner "remote-exec" {
-  #   script = "files/deploy.sh"
-  # }
+  provisioner "remote-exec" {
+    script = "${path.module}/files/deploy.sh"
+  }
 }
 
 resource "google_compute_firewall" "firewall_puma" {
