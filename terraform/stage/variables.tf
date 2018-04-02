@@ -20,8 +20,8 @@ variable private_key_path {
   description = "Path to the private key used for ssh access"
 }
 
-variable disk_image {
-  description = "Disk image"
+variable source_ip_allowed {
+  description = "IP address allowed to access app in prod"
 }
 
 variable count {
