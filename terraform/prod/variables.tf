@@ -20,15 +20,6 @@ variable private_key_path {
   description = "Path to the private key used for ssh access"
 }
 
-variable disk_image {
-  description = "Disk image"
-}
-
-variable count {
-  description = "Number of instances"
-  default     = 1
-}
-
 variable source_ip_allowed {
   description = "IP address allowed to access app in prod"
 }
@@ -41,4 +32,9 @@ variable app_disk_image {
 variable db_disk_image {
   description = "Disk image for reddit db"
   default     = "reddit-db-base"
+}
+
+variable deploy_app {
+  description = "Set true to deploy app"
+  default     = false
 }

@@ -26,6 +26,13 @@ resource "google_compute_instance" "db" {
     agent       = false
     private_key = "${file(var.private_key_path)}"
   }
+
+  provisioner "remote-exec" {
+    inline = [
+      "sudo sed -i '/bindIp/s/127.0.0.1/0.0.0.0/g' /etc/mongod.conf",
+      "sudo systemctl restart mongod",
+    ]
+  }
 }
 
 resource "google_compute_firewall" "firewall_mongo" {

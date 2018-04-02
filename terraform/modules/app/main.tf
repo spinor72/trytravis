@@ -20,26 +20,10 @@ resource "google_compute_instance" "app" {
     # сеть, к которой присоединить данный интерфейс
     network = "default"
 
-    # использовать ephemeral IP для доступа из Интернет
+    # использовать static IP для доступа из Интернет
     access_config = {
       nat_ip = "${google_compute_address.app_ip.address}"
     }
-  }
-
-  connection {
-    type        = "ssh"
-    user        = "appuser"
-    agent       = false
-    private_key = "${file(var.private_key_path)}"
-  }
-
-  provisioner "file" {
-    source      = "${path.module}/files/puma.service"
-    destination = "/tmp/puma.service"
-  }
-
-  provisioner "remote-exec" {
-    script = "${path.module}/files/deploy.sh"
   }
 }
 
