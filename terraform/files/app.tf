@@ -1,15 +1,8 @@
-provider "google" {
-  version = "1.4.0"
-  project = "${var.project}"
-  region  = "${var.region}"
-}
-
 resource "google_compute_instance" "app" {
-  name         = "reddit-app${count.index}"
+  name         = "reddit-app"
   machine_type = "g1-small"
   zone         = "${var.zone}"
   tags         = ["reddit-app"]
-  count        = "${var.count}"
 
   metadata {
     ssh-keys = "appuser:${file(var.public_key_path)}"
@@ -18,7 +11,7 @@ resource "google_compute_instance" "app" {
   # определение загрузочного диска
   boot_disk {
     initialize_params {
-      image = "${var.disk_image}"
+      image = "${var.app_disk_image}"
     }
   }
 
@@ -28,7 +21,9 @@ resource "google_compute_instance" "app" {
     network = "default"
 
     # использовать ephemeral IP для доступа из Интернет
-    access_config {}
+    access_config = {
+      nat_ip = "${google_compute_address.app_ip.address}"
+    }
   }
 
   connection {
@@ -67,15 +62,6 @@ resource "google_compute_firewall" "firewall_puma" {
   target_tags = ["reddit-app"]
 }
 
-# При таком способе добавления ключей, если хоть какие-нибудь ключи уже есть, то возникает ошибка и новые ключи не добавляются,  
-# resource "google_compute_project_metadata" "default" {
-#   metadata {
-#     ssh-keys = "appuser1:${file(var.public_key_path)}\nappuser2:${file(var.public_key_path)}"
-#   }
-# }
-
-# Новые ключи заменяют имеющиеся
-resource "google_compute_project_metadata_item" "default" {
-  key   = "ssh-keys"
-  value = "appuser1:${file(var.public_key_path)}\nappuser2:${file(var.public_key_path)}"
+resource "google_compute_address" "app_ip" {
+  name = "reddit-app-ip"
 }

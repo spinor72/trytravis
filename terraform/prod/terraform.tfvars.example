@@ -1,0 +1,17 @@
+project = "your-project"
+
+region = "your-region"
+
+zone = "your-region-x"
+
+public_key_path = "~/.ssh/appuser.pub"
+
+private_key_path = "~/.ssh/appuser"
+
+app_disk_image = "reddit-app-base"
+
+db_disk_image = "reddit-db-base"
+
+deploy_app = true
+
+source_ip_allowed = "0.0.0.0/0"
