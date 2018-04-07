@@ -19,6 +19,7 @@
     - name: restart mongod
       service: name=mongod state=restarted
 
+
 - name: Configure puma server
   hosts: app
   become: true
@@ -47,7 +48,6 @@
   handlers:
     - name: reload puma
       service: name=puma state=restarted
-    
 
 
 - name: Deploy reddit app
@@ -71,5 +71,3 @@
     - name: restart puma
       become: true
       systemd: name=puma state=restarted
-
-
