@@ -21,6 +21,21 @@ dbserver ansible_host="${module.db.db_external_ip}"
 EOF
 }
 
+output "inventory_yml" {
+  value = <<EOF
+app:
+  hosts:
+    appserver:
+      ansible_host: "${module.app.app_external_ip}"
+      db_host: "${module.db.db_internal_ip}"
+
+db:
+  hosts:
+    dbserver:
+      ansible_host: "${module.db.db_external_ip}"
+EOF
+}
+
 output "inventory_json" {
   value = {
     "app" = {
