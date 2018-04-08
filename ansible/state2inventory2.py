@@ -10,6 +10,7 @@ BUCKET = "storage-bucket-spinor-test"
 PREFIX = "terraform/stage"
 
 URL_TEMPLATE = "gs://{}/{}/default.tfstate"
+DEBUG = False
 
 
 def load_state():
@@ -22,9 +23,13 @@ def load_state():
             sys.exit(os.EX_DATAERR)
         data = json.loads(state_loader.stdout.read())
         return data
+
     except ValueError:
-        sys.stderr.write("No JSON object could be decoded")
-        sys.exit(os.EX_DATAERR)
+        if DEBUG:
+            sys.stderr.write("No JSON object could be decoded")
+            sys.exit(os.EX_DATAERR)
+        else:
+            print "{}"
 
 
 def print_list(data):
@@ -55,11 +60,17 @@ def print_list(data):
 
         print json.dumps(inventory, sort_keys=True, indent=4, separators=(',', ': '))
     except ValueError as e:
-        sys.stderr.write(e.message)
-        sys.exit(os.EX_DATAERR)
+        if DEBUG:
+            sys.stderr.write(e.message)
+            sys.exit(os.EX_DATAERR)
+        else:
+            print "{}"
     except AttributeError:
-        sys.stderr.write("Inventory data invalid")
-        sys.exit(os.EX_DATAERR)
+        if DEBUG:
+            sys.stderr.write("Inventory data invalid")
+            sys.exit(os.EX_DATAERR)
+        else:
+            print "{}"
 
 
 def print_host(host):

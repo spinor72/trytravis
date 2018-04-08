@@ -11,6 +11,8 @@ PREFIX = "terraform/stage"
 # out var where json stored
 INVENTORY_OUT = "inventory_json"
 
+DEBUG = False
+
 URL_TEMPLATE = "gs://{}/{}/default.tfstate"
 
 def print_list():
@@ -28,13 +30,20 @@ def print_list():
         inventory = outputs.get('outputs').get(INVENTORY_OUT).get('value')
         inventory = json.loads(inventory)
         print json.dumps(inventory, sort_keys=True, indent=4, separators=(',', ': '))
+        
     except ValueError:
-        sys.stderr.write("No JSON object could be decoded")
-        sys.exit(os.EX_DATAERR)
+        if DEBUG:
+            sys.stderr.write("No JSON object could be decoded")
+            sys.exit(os.EX_DATAERR)
+        else:
+            print "{}"
 
     except AttributeError:
-        sys.stderr.write("Inventory data invalid")
-        sys.exit(os.EX_DATAERR)
+        if DEBUG:
+            sys.stderr.write("Inventory data invalid")
+            sys.exit(os.EX_DATAERR)
+        else:
+            print "{}"
 
 
 def print_host(host):
