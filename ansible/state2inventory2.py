@@ -29,13 +29,13 @@ def load_state():
             sys.stderr.write("No JSON object could be decoded")
             sys.exit(os.EX_DATAERR)
         else:
-            print "{}"
+            return "{}"
     except OSError:
         if DEBUG:
             sys.stderr.write("Gsutill not installed or other system error")
             sys.exit(os.EX_DATAERR)
         else:
-            print "{}"
+            return "{}"
 
 
 def print_list(data):
