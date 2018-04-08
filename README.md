@@ -209,3 +209,69 @@ _После проверки, удалить созданное командой
   - Для проверки задания со * поменять ip-адреса в файле `inventory.json` и проверить работу командой `ansible all -m ping -i json2inventory.py` 
    
 _После проверки, удалить созданные в окружении stage инстансы командой `terraform destroy`_
+
+
+## ДЗ №10 Деплой и управление конфигурацией с Ansible.
+
+ - [x] Основное ДЗ
+ - [x] Задание со *
+ 
+### В процессе сделано:
+ - Изменен провижининг в packer. Теперь при создании с помощью packer образов `reddit-app-base` `reddit-db-base` для провижининга используются плейбуки ansible   
+ - Рассмотрены несколько подходов к созданию плейбуков и сценариев:
+    - `reddit_app_one_play.yml` Один playbook, один сценарий , подход неудобен, особенно при большой инфраструктуре,  поскольку необходимо запускать, явно указывая теги и хосты (`--limit` и `--tags`).
+    - `reddit_app_multiple_plays.yml` Один плейбук, несколько сценариев. В этом случае необходимо запускать указывая только теги.
+    - `site.yml` Несколько плейбуков , объединныных с помощью include  в главный плейбук. Теги уже не нужны.  Можно переиспользовать плейбуки по-разному их объединяя. 
+  - Для удобства формирования inventory после пересоздания инфраструктуры терраформом добавил output-переменную, в которую терраформ запишет в формате yaml данные inventory.
+  - Для задания со * написан концепт python-скрипта для динамического инвентори из state-файла терраформа, размещенного в бекенде. Для формирования данных в папку с модулями terrafrom добавлен модуль `ansible`, представляющий из себя null-resource c переменными. В stage-окружении терраформа добавлен удаленный бекенд для хранения конфигурации и конфигурационный файл `ansible.tf` для формирования данных для динамического inventory. 
+  
+### Как запустить проект:
+
+ Подготовить с помощью packer новые образы, использующие ansible для провижининга, запустив из корня репозитория команды :
+ ```
+ packer build -var-file=packer/variables.json packer/app.json
+ packer build -var-file=packer/variables.json packer/db.json
+ ```
+_Для того, чтобы провижининг сработал, необходимо чтобы в файволе имелось правило , разрешающее доступ по ssh_
+ 
+ В папке terraform/stage  
+   - создать файлик `terrafrom.tfvars` с нужными значениями переменных (за образец взять `terraform/stage/terrafrom.tfvars.example`)
+   - инициализировать среду командой `terrafrom init` и создать инфраструктуру `terraform apply`
+   - обновить инвентори для ansible `terraform output  inventory_yml > ../../ansible/inventory.yml`
+   
+_stage теперь хранит стейт в бакете `storage-bucket-spinor-test` его нужно создать, если не создан ранее_
+
+В папке ansible запустить идин из вариантов:
+ - Один playbook, один сценарий
+  ```
+  ansible-playbook reddit_app_one_play.yml --tags db-tag --limit db
+  ansible-playbook reddit_app_one_play.yml --tags app-tag --limit app
+  ansible-playbook reddit_app_one_play.yml --tags deploy-tag --limit app
+  ```
+ - Один плейбук, несколько сценариев
+  ```
+  ansible-playbook reddit_app_multiple_plays.yml --tags db-tag
+  ansible-playbook reddit_app_multiple_plays.yml --tags app-tag
+  ansible-playbook reddit_app_multiple_plays.yml --tags deploy-tag
+  ```
+ - Несколько плейбуков , объединныных с помощью include  в главный плейбук
+   ```
+   ansible-playbook site.yml
+   ```
+Для пересоздания инфраструктуры, между запусками вариантов, можно использовать скриптик `refresh-infra.sh` :
+```
+cd ../terraform/stage
+terraform destroy -auto-approve=true
+terraform apply -auto-approve=true
+terraform output  inventory_yml > ../../ansible/inventory.yml
+cd ../../ansible
+```
+#### Задание со *
+Для проверки скрипта динамического инвентори поменять в `ansible.cfg` параметр `inventory` на значение `./state2inventory2.py` 
+   
+### Как проверить работоспособность:
+ - Узнать из inventory или terraform output внешний адрес app сервера.
+ - Перейти в браузере на страничку с таким адресом и портом 9292 
+ - Должен открываться интерфейс тестового приложения, в котором можно залогиниться и написать сообшение. 
+   
+_После проверки, удалить созданные в окружении stage инстансы командой `terraform destroy`_
