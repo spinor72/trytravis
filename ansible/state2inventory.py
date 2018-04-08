@@ -30,7 +30,7 @@ def print_list():
         inventory = outputs.get('outputs').get(INVENTORY_OUT).get('value')
         inventory = json.loads(inventory)
         print json.dumps(inventory, sort_keys=True, indent=4, separators=(',', ': '))
-        
+
     except ValueError:
         if DEBUG:
             sys.stderr.write("No JSON object could be decoded")
@@ -44,6 +44,14 @@ def print_list():
             sys.exit(os.EX_DATAERR)
         else:
             print "{}"
+
+    except OSError:
+        if DEBUG:
+            sys.stderr.write("Gsutill not installed or other system error")
+            sys.exit(os.EX_DATAERR)
+        else:
+            print "{}"
+
 
 
 def print_host(host):

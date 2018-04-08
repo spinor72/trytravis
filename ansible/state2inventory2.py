@@ -30,6 +30,12 @@ def load_state():
             sys.exit(os.EX_DATAERR)
         else:
             print "{}"
+    except OSError:
+        if DEBUG:
+            sys.stderr.write("Gsutill not installed or other system error")
+            sys.exit(os.EX_DATAERR)
+        else:
+            print "{}"
 
 
 def print_list(data):
