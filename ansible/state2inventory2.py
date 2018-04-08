@@ -41,7 +41,7 @@ def load_state():
 def print_list(data):
     try:
         inventory = {"_meta": {"hostvars": {}}}
-        hosts = (i for i in data['modules'] if i.get('resources') and i.get('resources').get('null_resource.ansible'))
+        hosts = (i for i in data.get('modules',[]) if i.get('resources') and i.get('resources').get('null_resource.ansible'))
         for _ in hosts:
             host = _.get('outputs')
 
