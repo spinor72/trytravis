@@ -8,3 +8,4 @@ packer/variables.json
 jdauphant.nginx
 .vscode
 .idea
+vault.key
