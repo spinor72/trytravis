@@ -20,7 +20,7 @@ def print_list():
         state_loader = Popen(["gsutil", "cp", URL_TEMPLATE.format(BUCKET, PREFIX), "-"], stdout=PIPE, stderr=PIPE)
         error = state_loader.stderr.read()
         if error:
-            print error
+            # print error
             sys.stderr.write(error)
             sys.exit(os.EX_DATAERR)
         data = json.loads(state_loader.stdout.read())
