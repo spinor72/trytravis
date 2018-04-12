@@ -4,17 +4,26 @@ import os
 import argparse
 import json
 from subprocess import Popen, PIPE
+import ConfigParser
 
-# set bucket and prefix as in terrafrom gcp backend config
 BUCKET = "storage-bucket-spinor-test"
-PREFIX = "terraform/state"
+PREFIX = "terraform/stage"
+config = ConfigParser.SafeConfigParser({'bucket': BUCKET, 'prefix': PREFIX})
+config.read(os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])),'state2inventory2.cfg'))
+
+# NoSectionError
+
+# Set the third, optional argument of get to 1 if you wish to use raw mode.
+prefix = config.get('gs', 'prefix')
+bucket = config.get('gs', 'bucket')
+
 
 URL_TEMPLATE = "gs://{}/{}/default.tfstate"
 DEBUG = False
 
 def load_state():
     try:
-        state_loader = Popen(["gsutil", "cp", URL_TEMPLATE.format(BUCKET, PREFIX), "-"], stdout=PIPE, stderr=PIPE)
+        state_loader = Popen(["gsutil", "cp", URL_TEMPLATE.format(bucket, prefix), "-"], stdout=PIPE, stderr=PIPE)
         error = state_loader.stderr.read()
         if error:
             print error

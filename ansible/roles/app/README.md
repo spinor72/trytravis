@@ -1,12 +1,12 @@
-Role Name
+app
 =========
 
-Role installs systemd unit for puma service .
+configure puma service .
 
 Requirements
 ------------
 
-reddit app should be deployed
+puma app server
 
 Role Variables
 --------------
@@ -21,16 +21,14 @@ no
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
-
-    - hosts: app
+    - hosts: apphosts
       roles:
-         - { role: username.rolename, x: 42 }
+         - { role: app, db_host: 127.0.0.1 }
 
 License
 -------
 
-BSD
+OTUS
 
 Author Information
 ------------------
