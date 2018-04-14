@@ -19,7 +19,6 @@
     - name: restart mongod
       service: name=mongod state=restarted
 
-
 - name: Configure puma server
   hosts: app
   become: true
@@ -49,7 +48,6 @@
     - name: reload puma
       service: name=puma state=restarted
 
-
 - name: Deploy reddit app
   hosts: app
   tags: deploy-tag
@@ -61,7 +59,7 @@
         dest: /home/appuser/reddit
         version: monolith
       notify: restart puma
-    
+
     - name: Bundle install
       bundler:
         state: present

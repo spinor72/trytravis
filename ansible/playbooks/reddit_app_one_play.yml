@@ -13,7 +13,7 @@
         mode: 0644
       tags: db-tag
       notify: restart mongod
-    
+
     - name: Add unit file for Puma
       become: true
       copy:
@@ -40,22 +40,22 @@
         version: monolith
       tags: deploy-tag
       notify: restart puma
-    
+
     - name: Bundle install
       bundler:
         state: present
         chdir: /home/appuser/reddit
-      tags: deploy-tag      
+      tags: deploy-tag
 
   handlers:
     - name: restart mongod
       become: true
       service: name=mongod state=restarted
-    
+
     - name: reload puma
       become: true
       service: name=puma state=restarted
-    
+
     - name: restart puma
       become: true
       systemd: name=puma state=restarted

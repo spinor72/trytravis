@@ -275,3 +275,5 @@ cd ../../ansible
  - Должен открываться интерфейс тестового приложения, в котором можно залогиниться и написать сообшение. 
    
 _После проверки, удалить созданные в окружении stage инстансы командой `terraform destroy`_
+
+[![Build Status](https://travis-ci.org/Otus-DevOps-2018-02/spinor72_infra.svg?branch=ansible-3)](https://travis-ci.org/Otus-DevOps-2018-02/spinor72_infra)
