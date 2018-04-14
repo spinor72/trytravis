@@ -6,21 +6,13 @@ import json
 from subprocess import Popen, PIPE
 import ConfigParser
 
-BUCKET = "storage-bucket-spinor-test"
-PREFIX = "terraform/stage"
-config = ConfigParser.SafeConfigParser({'bucket': BUCKET, 'prefix': PREFIX})
-config.read(os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])),'state2inventory2.cfg'))
-
-
-# Set the third, optional argument of get to 1 if you wish to use raw mode.
-prefix = config.get('gs', 'prefix')
-bucket = config.get('gs', 'bucket')
-
-
 URL_TEMPLATE = "gs://{}/{}/default.tfstate"
 DEBUG = False
+BUCKET = "storage-bucket-spinor-test"
+PREFIX = "terraform/stage"
 
-def load_state():
+
+def load_state(bucket, prefix):
     try:
         state_loader = Popen(["gsutil", "cp", URL_TEMPLATE.format(bucket, prefix), "-"], stdout=PIPE, stderr=PIPE)
         error = state_loader.stderr.read()
@@ -89,13 +81,29 @@ def print_list(data):
 def print_host(host):
     print '{}'
 
+prefix = os.environ.get('GS_BUCKET')
+bucket = os.environ.get('GS_PREFIX')
+
+config = ConfigParser.ConfigParser()
+config_file = os.path.splitext(os.path.abspath(__file__))[0] + ".cfg"
+if os.path.isfile (config_file):
+    try:
+        config.read(config_file)
+        prefix = config.get('gs', 'prefix')
+        bucket = config.get('gs', 'bucket')
+    except :
+        sys.stderr.write("Error in configuration file")
+
+if not prefix or not bucket:
+    sys.stderr.write("Cannot set configuration options for bucket")
+    sys.exit(os.EX_DATAERR)
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--list", help="print inventory in json format", action="store_true")
 parser.add_argument("--host", help="print host vars in json format")
 args = parser.parse_args()
 
-state = load_state()
+state = load_state(bucket, prefix)
 if args.list:
     print_list(state)
 elif args.host:
