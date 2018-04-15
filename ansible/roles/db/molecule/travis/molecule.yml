@@ -1,0 +1,22 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: gce
+lint:
+  name: yamllint
+platforms:
+  - name: instance-travis
+    zone: europe-west4-b
+    machine_type: f1-micro
+    image: ubuntu-1604-xenial
+provisioner:
+  name: ansible
+  lint:
+    name: ansible-lint
+scenario:
+  name: travis
+verifier:
+  name: testinfra
+  lint:
+    name: flake8
