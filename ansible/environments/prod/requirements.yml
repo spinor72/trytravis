@@ -1,3 +1,7 @@
 ---
 - src: jdauphant.nginx
   version: v2.13
+
+- src: https://github.com/spinor72/infra-role-db.git
+  version: "0.2"
+  name: db
