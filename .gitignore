@@ -1,7 +1,6 @@
 *.retry
 .vscode
 .idea
-vault.key
 # Vagrant & molecule
 .vagrant/
 *.log
@@ -9,3 +8,7 @@ vault.key
 .molecule
 .cache
 .pytest_cache
+credentials.json
+*.pem
+google_compute_engine
+secrets.tar
