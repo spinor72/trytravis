@@ -3,7 +3,7 @@
   hosts: all
   become: true
   tasks:
-  - name: Install ruby, bundler and etc. 
+  - name: Install ruby, bundler and etc.
     apt:
       name: "{{ item }}"
       state:  present

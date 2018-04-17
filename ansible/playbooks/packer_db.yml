@@ -3,7 +3,7 @@
   hosts: all
   become: true
   tasks:
-  - name: Add an apt key for mongo repo 
+  - name: Add an apt key for mongo repo
     apt_key:
       keyserver: keyserver.ubuntu.com
       id: EA312927
@@ -15,11 +15,11 @@
       state: present
 
   - name: Install mongodb
-    apt: 
+    apt:
       name: mongodb-org
       state:  present
 
-  - name: Enable mongod service 
+  - name: Enable mongod service
     systemd:
       name: mongod
       enabled: yes

@@ -1,7 +1,6 @@
 ---
 - name: Deploy reddit app
   hosts: app
-  tags: deploy-tag
 
   tasks:
     - name: Fetch the latest version of application code
@@ -10,7 +9,7 @@
         dest: /home/appuser/reddit
         version: monolith
       notify: restart puma
-    
+
     - name: Bundle install
       bundler:
         state: present

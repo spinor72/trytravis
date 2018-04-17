@@ -49,3 +49,22 @@ resource "google_compute_firewall" "firewall_puma" {
 resource "google_compute_address" "app_ip" {
   name = "reddit-app-ip"
 }
+
+resource "google_compute_firewall" "firewall_http2app" {
+  name = "allow-http2app-default"
+
+  # Название сети, в которой действует правило
+  network = "default"
+
+  # Какой доступ разрешить
+  allow {
+    protocol = "tcp"
+    ports    = ["80"]
+  }
+
+  # Каким адресам разрешаем доступ
+  source_ranges = ["0.0.0.0/0"]
+
+  # Правило применимо для инстансов с тегом …
+  target_tags = ["reddit-app"]
+}

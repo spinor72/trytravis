@@ -1,0 +1,1 @@
+../stage/state2inventory2.py

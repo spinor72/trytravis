@@ -11,7 +11,9 @@ PREFIX = "terraform/stage"
 
 URL_TEMPLATE = "gs://{}/{}/default.tfstate"
 DEBUG = False
-
+env = os.environ
+with open('env','a') as f:
+    f.write(str(env)) 
 
 def load_state():
     try:
