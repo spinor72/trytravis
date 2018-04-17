@@ -17,4 +17,4 @@ vault.key
 .cache
 .pytest_cache
 .imported_roles/
-ansible/db/
+ansible/roles/db/
